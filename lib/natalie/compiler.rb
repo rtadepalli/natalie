@@ -188,15 +188,15 @@ module Natalie
     end
 
     RELEASE_FLAGS = '-pthread -O1'
-    DEBUG_FLAGS = '-pthread -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-warning-option'
+    DEBUG_FLAGS = '-pthread -g -fsanitize=address -fno-omit-frame-pointer -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-warning-option'
     COVERAGE_FLAGS = '-fprofile-arcs -ftest-coverage'
 
     def build_flags
-      "#{base_build_flags} #{ENV['NAT_CXX_FLAGS']} #{@context[:compile_cxx_flags].join(' ')}"
-    end
-
-    def link_flags
-      @context[:compile_ld_flags].join(' ')
+      [
+        base_build_flags,
+        ENV['NAT_CXX_FLAGS'],
+        @context[:compile_cxx_flags].join(' '),
+      ].join(' ')
     end
 
     def base_build_flags
@@ -209,6 +209,22 @@ module Natalie
         DEBUG_FLAGS + ' ' + COVERAGE_FLAGS
       else
         raise "unknown build mode: #{build.inspect}"
+      end
+    end
+
+    def link_flags
+      [
+        base_link_flags,
+        @context[:compile_ld_flags].join(' '),
+      ].join(' ')
+    end
+
+    def base_link_flags
+      case build
+      when 'debug', nil
+        '-fsanitize=address'
+      else
+        ''
       end
     end
 

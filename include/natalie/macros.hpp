@@ -121,3 +121,5 @@
 #define NAT_MAKE_NONCOPYABLE(c) \
     c(const c &) = delete;      \
     c &operator=(const c &) = delete
+
+#define NO_SANITIZE_ADDRESS __attribute__((no_sanitize("address")))

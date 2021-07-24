@@ -24,7 +24,7 @@ void MarkingVisitor::visit(ValuePtr val) {
     visit(val.value_or_null());
 }
 
-Hashmap<Cell *> Heap::gather_conservative_roots() {
+NO_SANITIZE_ADDRESS Hashmap<Cell *> Heap::gather_conservative_roots() {
     Hashmap<Cell *> roots;
 
     void *dummy;

@@ -90,7 +90,7 @@ void FiberValue::yield_back(Env *env, size_t argc, ValuePtr *args) {
     fiber_asm_switch(s_current->fiber(), this->fiber(), 0, env, s_current);
 }
 
-void FiberValue::visit_children(Visitor &visitor) {
+NO_SANITIZE_ADDRESS void FiberValue::visit_children(Visitor &visitor) {
     Value::visit_children(visitor);
     visitor.visit(m_block);
     if (m_start_of_stack == Heap::the().start_of_stack())
