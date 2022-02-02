@@ -246,6 +246,12 @@ class TestCompiler2 < TestCase
     assert_eq(0, z)
   end
 
+  def test_global_variable
+    $global = 1
+    assert_eq(1, $global)
+    assert_eq(nil, $non_existent_global)
+  end
+
   private
 
   def ary
