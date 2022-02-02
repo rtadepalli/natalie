@@ -206,6 +206,16 @@ class TestCompiler2 < TestCase
           3
         end
     assert_eq(3, z)
+    begin
+      begin
+        raise ZeroDivisionError
+      rescue NoMethodError
+        # wrong rescue class
+      end
+    rescue => e
+      # exception bubbles up
+      assert_eq(ZeroDivisionError, e.class)
+    end
   end
 
   def test_rescue_get_exception
