@@ -1,4 +1,5 @@
 #include "natalie.hpp"
+#include <sys/syscall.h>
 
 namespace Natalie {
 
@@ -7,10 +8,10 @@ NativeProfilerEvent *NativeProfilerEvent::named(const Type type, const ManagedSt
 }
 
 NativeProfilerEvent *NativeProfilerEvent::named(const Type type, const char *name) {
-#if defined(__OpenBSD__) or defined(__APPLE__)
-    auto tid = 0; // FIXME: get thread id on OpenBSD/macOS
+#if defined(__linux__)
+    auto tid = syscall(SYS_gettid);
 #else
-    auto tid = gettid();
+    auto tid = 0; // FIXME: get thread id on other platforms
 #endif
     return new NativeProfilerEvent(type, strdup(name), tid);
 }
